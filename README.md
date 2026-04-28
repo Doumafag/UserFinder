@@ -37,8 +37,8 @@ GET https://api.github.com/users/{username}
 Установка и запуск
 1. Клонирование репозитория
 bash
-git clone https://github.com/your-username/github-user-finder.git
-cd github-user-finder
+git clone (https://github.com/Doumafag/UserFinder.git)
+cd github-UserFinder
 2. Установка зависимостей
 bash
 pip install -r requirements.txt
