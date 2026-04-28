@@ -10,23 +10,18 @@ class GitHubUserFinder:
         self.root = root
         self.root.title("GitHub User Finder")
         self.root.geometry("800x600")
-        self.root.resizable(True, True)
-        
-        # Файл для хранения избранных
+        self.root.resizable(True, True)    
+    
         self.favorites_file = "favorites.json"
         self.favorites = self.load_favorites()
         
-        # Переменные
         self.search_var = tk.StringVar()
         
-        # Создание интерфейса
         self.create_widgets()
         
-        # Привязка клавиши Enter к поиску
         self.root.bind('<Return>', lambda event: self.search_users())
     
     def create_widgets(self):
-        # Верхняя панель с поиском
         top_frame = ttk.Frame(self.root, padding="10")
         top_frame.pack(fill=tk.X)
         
@@ -41,15 +36,12 @@ class GitHubUserFinder:
         self.fav_btn = ttk.Button(top_frame, text="⭐ Избранное", command=self.show_favorites)
         self.fav_btn.pack(side=tk.LEFT, padx=5)
         
-        # Основной контент
         main_frame = ttk.Frame(self.root, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
         
-        # Панель с результатами
         results_frame = ttk.LabelFrame(main_frame, text="Результаты поиска", padding="5")
         results_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
         
-        # Список результатов с прокруткой
         self.results_listbox = tk.Listbox(results_frame, height=20, font=("Arial", 10))
         scrollbar = ttk.Scrollbar(results_frame, orient=tk.VERTICAL, command=self.results_listbox.yview)
         self.results_listbox.configure(yscrollcommand=scrollbar.set)
@@ -57,33 +49,28 @@ class GitHubUserFinder:
         self.results_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # Привязка клика для показа деталей
         self.results_listbox.bind('<<ListboxSelect>>', self.on_result_select)
         
-        # Панель деталей
         details_frame = ttk.LabelFrame(main_frame, text="Детали пользователя", padding="10")
         details_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         
         self.details_text = tk.Text(details_frame, height=20, wrap=tk.WORD, font=("Arial", 10))
         self.details_text.pack(fill=tk.BOTH, expand=True)
         
-        # Кнопки действий
         actions_frame = ttk.Frame(details_frame)
         actions_frame.pack(fill=tk.X, pady=(10, 0))
         
-        self.add_fav_btn = ttk.Button(actions_frame, text="❤️ Добавить в избранное", command=self.add_to_favorites)
+        self.add_fav_btn = ttk.Button(actions_frame, text=" Добавить в избранное", command=self.add_to_favorites)
         self.add_fav_btn.pack(side=tk.LEFT, padx=5)
         
-        self.remove_fav_btn = ttk.Button(actions_frame, text="💔 Удалить из избранного", command=self.remove_from_favorites)
+        self.remove_fav_btn = ttk.Button(actions_frame, text=" Удалить из избранного", command=self.remove_from_favorites)
         self.remove_fav_btn.pack(side=tk.LEFT, padx=5)
         
-        # Статусная строка
         self.status_var = tk.StringVar()
         self.status_var.set("Готов к работе")
         status_bar = ttk.Label(self.root, textvariable=self.status_var, relief=tk.SUNKEN, anchor=tk.W)
         status_bar.pack(side=tk.BOTTOM, fill=tk.X)
-        
-        # Хранилище результатов поиска
+       
         self.search_results = []
         self.selected_user = None
     
@@ -106,7 +93,6 @@ class GitHubUserFinder:
         self.root.update()
         
         try:
-            # GitHub API поиск пользователей
             url = f"https://api.github.com/search/users?q={query}&per_page=20"
             headers = {"Accept": "application/vnd.github.v3+json"}
             
@@ -116,7 +102,6 @@ class GitHubUserFinder:
                 data = response.json()
                 self.search_results = data.get("items", [])
                 
-                # Очистка списка
                 self.results_listbox.delete(0, tk.END)
                 
                 if self.search_results:
@@ -189,7 +174,6 @@ class GitHubUserFinder:
                 self.details_text.insert(1.0, details)
                 self.status_var.set(f"Информация о {username} загружена")
                 
-                # Обновляем состояние кнопок избранного
                 self.update_favorite_buttons(username)
             else:
                 self.details_text.insert(1.0, f"Ошибка загрузки: {response.status_code}")
@@ -238,7 +222,6 @@ class GitHubUserFinder:
             messagebox.showinfo("Информация", f"Пользователь @{username} уже в избранном")
             return
         
-        # Сохраняем основную информацию о пользователе
         favorite_data = {
             "login": username,
             "name": self.selected_user.get("name", "N/A"),
@@ -283,11 +266,9 @@ class GitHubUserFinder:
             ttk.Label(fav_window, text="Нет избранных пользователей", font=("Arial", 12)).pack(expand=True)
             return
         
-        # Создаём фрейм со списком
         list_frame = ttk.Frame(fav_window, padding="10")
         list_frame.pack(fill=tk.BOTH, expand=True)
         
-        # Список избранных
         fav_listbox = tk.Listbox(list_frame, font=("Arial", 10))
         scrollbar = ttk.Scrollbar(list_frame, orient=tk.VERTICAL, command=fav_listbox.yview)
         fav_listbox.configure(yscrollcommand=scrollbar.set)
@@ -298,7 +279,6 @@ class GitHubUserFinder:
         fav_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # Кнопка закрытия
         ttk.Button(fav_window, text="Закрыть", command=fav_window.destroy).pack(pady=10)
 
 def main():
