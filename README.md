@@ -45,9 +45,3 @@ pip install -r requirements.txt
 3. Запуск приложения
 bash
 python main.py
-
-### Заголовки запросов
-```python
-headers = {
-    "Accept": "application/vnd.github.v3+json"
-}
